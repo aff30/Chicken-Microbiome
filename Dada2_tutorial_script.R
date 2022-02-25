@@ -37,7 +37,6 @@ length(ourlist)
 # dada2 maintains a list of databases: https://benjjneb.github.io/dada2/training.html
 DB = "~/Desktop/gg_13_8_train_set_97.fa.gz"
 
-
 # paired end characterization; most Illumina files are sample names + "_R1_001.fastq" for forward reads
 # however, sequences downloaded from NCBI have patterns: "_1.fastq" for forward and "_2.fastq" for reverse
 PATTERNF = "_R1_001.fastq.gz"
@@ -90,6 +89,7 @@ cleaned <- filterAndTrim(
   # MAC ONLY: multithread ability
   multithread = TRUE
 )
+
 
 # path to filtered and cleaned reads
 CLEANEDPATH = "./data/filtered/"
