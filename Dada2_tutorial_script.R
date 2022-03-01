@@ -11,6 +11,8 @@ install.packages("BiocManager", version = 3.14)
 # load package
 require(BiocManager)
 
+#read in our image from the last session
+load("working-image.")
 # install dada2
 BiocManager::install("dada2")
 
@@ -35,7 +37,7 @@ length(ourlist)
 #  set pathway to the database you prefer - we will use Greengenes
 ## NOTE:Github doesn't handle fastq.gz files well so download these locally
 # dada2 maintains a list of databases: https://benjjneb.github.io/dada2/training.html
-DB = "~/Desktop/gg_13_8_train_set_97.fa.gz"
+DB = "~/Desktop/reference/silva_nr99_v138.1_train_set.fa.gz"
 
 # paired end characterization; most Illumina files are sample names + "_R1_001.fastq" for forward reads
 # however, sequences downloaded from NCBI have patterns: "_1.fastq" for forward and "_2.fastq" for reverse
@@ -130,8 +132,13 @@ if(length(fwdNames) != length(revNames)) {
 # perform error learning
 errF <- learnErrors(forward, 
                     multithread = TRUE)
+
 errR <- learnErrors(reverse, 
                     multithread = TRUE)
+
+# plot errors 
+plotErrors(errF, nominalQ = TRUE)
+save.image(file = ".RData")
 
 # perform denoising on forward and reverse reads
 dadaForward <- dada(derep = forward, 
@@ -162,6 +169,10 @@ tax <- assignTaxonomy(seqs = seqtab.nochim,
                       refFasta = DB, 
                       multithread = TRUE,
                       verbose = TRUE)
+
+# end of Dada2
+save(seqtab.nochim, file = "asv-table.RData")
+save(tax, file = "taxonomy-table.RData")
 
 ## This is the end of the dada2 algorithm
 ## OPTIONAL: export ASV table and taxonomy table to text files
